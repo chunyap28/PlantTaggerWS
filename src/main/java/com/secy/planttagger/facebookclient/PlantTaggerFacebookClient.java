@@ -8,7 +8,6 @@ package com.secy.planttagger.facebookclient;
 //import com.restfb.DefaultFacebookClient;
 //import com.restfb.FacebookClient;
 //import com.restfb.types.User;
-import com.secy.planttagger.Constants;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
@@ -17,13 +16,29 @@ import org.springframework.social.oauth2.OAuth2Operations;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
  * @author chunyap
  */
+@Component
 public class PlantTaggerFacebookClient {
-            
+    
+    public static String appId;
+    public static String appSecret;
+
+    @Value("${facebook.app_id}")
+    public void setAppId(String app_id) {
+        appId = app_id;
+    }
+    
+    @Value("${facebook.app_secret}")
+    public void setAppSecret(String app_secret) {
+        appSecret = app_secret;
+    }
+    
     public static Boolean validateUserToken(String userToken) {        
         String appToken = fetchApplicationAccessToken();
         Facebook facebook = new FacebookTemplate(appToken);
@@ -44,8 +59,8 @@ public class PlantTaggerFacebookClient {
         return facebook.userOperations().getUserProfileImage();        
     }
      
-    private static String fetchApplicationAccessToken() {
-        OAuth2Operations oauth = new FacebookConnectionFactory(Constants.MY_APP_ID, Constants.MY_APP_SECRET).getOAuthOperations();
+    private static String fetchApplicationAccessToken() {           
+        OAuth2Operations oauth = new FacebookConnectionFactory(PlantTaggerFacebookClient.appId, PlantTaggerFacebookClient.appSecret).getOAuthOperations();
         return oauth.authenticateClient().getAccessToken();
     }
     
@@ -73,4 +88,6 @@ public class PlantTaggerFacebookClient {
             return is_valid;
         }
     }
+
+    
 }

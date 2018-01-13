@@ -2,15 +2,10 @@
 server:
   contextPath:
 
-# JACKSON
-spring:
-  jackson:
-    serialization:
-      INDENT_OUTPUT: true
-
 jwt:
   header: Authorization
-  secret: mySecret
+  #mySecret
+  secret: ${JWT_SECRET}
   expiration: 604800
   route:
     authentication:
@@ -21,3 +16,55 @@ jwt:
 #  level:
 #    org.springframework:
 #      security: DEBUG
+facebook:
+    #1422830621123522
+    app_id: ${FACEBOOK_APPID}
+    #c6eecfd6f55affa5d5e7c723d1920349    
+    app_secret: ${FACEBOOK_APPSECRET}
+
+planttagger:
+    uploadpath: /tmp/upload/
+    
+spring:
+    #data
+    data:
+        neo4j:
+            #http://localhost:7474
+            URI: ${DB_HOST}
+            #neo4j
+            username: ${DB_USERNAME}
+            #neo4j123
+            password: ${DB_PASSWORD}
+    #mail
+    mail:
+        #smtp.gmail.com
+        host: ${MAIL_HOST}
+        #587
+        port: ${MAIL_PORT}
+        #chunyap28@gmail.com
+        username: ${MAIL_USERNAME}
+        password: ${MAIL_PASSWORD}
+        properties:
+            mail:
+                smtp:
+                    starttls:
+                        enable: true
+                        required: true
+                    auth: true
+                    connectiontimeout: 5000
+                    timeout: 5000
+                    writetimeout: 5000
+    #rabbit
+    rabbitmq:
+        #5672
+        port: ${MQ_PORT}
+        #guest
+        username: ${MQ_USERNAME}
+        #guest
+        password: ${MQ_PASSWORD}
+        #localhost
+        host: ${MQ_HOST}
+    #jackson
+    jackson:
+    serialization:
+      INDENT_OUTPUT: true

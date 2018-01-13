@@ -38,6 +38,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(this.userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
+    /*
+    @Bean
+    public org.neo4j.ogm.config.Configuration getConfiguration() {
+       org.neo4j.ogm.config.Configuration config = new org.neo4j.ogm.config.Configuration();
+       config
+           .driverConfiguration()
+           .setURI("http://localhost:7474");
+       return config;
+    }*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {

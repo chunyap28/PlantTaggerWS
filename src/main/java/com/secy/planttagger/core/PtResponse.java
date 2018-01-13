@@ -7,6 +7,7 @@ package com.secy.planttagger.core;
 
 import org.springframework.http.ResponseEntity;
 import java.util.*;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 /**
  *
@@ -71,6 +72,28 @@ public class PtResponse{
      */
     public final void setResult(Map result) {
         this.response.put("result", result);
+    }
+    
+    public final void setResult(Mapper result) {
+        this.response.put("result", result);
+    }
+    
+    public final void setResult(Object result) {
+        this.response.put("result", result);
+    }
+        
+    public final void setPage(Page<BaseEntity> page) {  
+       this.response.put("result", page.getContent());
+       this.response.put("totalElements", page.getTotalElements());
+       this.response.put("totalPages", page.getTotalPages());
+       this.response.put("size", page.getSize());
+    }
+    
+    public final void setPage(Page<BaseEntity> page, String keys) {  
+       this.response.put("result", page.getContent());
+       this.response.put("totalElements", page.getTotalElements());
+       this.response.put("totalPages", page.getTotalPages());
+       this.response.put("size", page.getSize());
     }
     
     /**

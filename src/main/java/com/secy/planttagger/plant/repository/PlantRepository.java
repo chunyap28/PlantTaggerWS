@@ -14,6 +14,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface PlantRepository extends BaseRepository<Plant>
 {
-    @Query("MATCH (m:Account)<-[r:HAS_PUBLIC_ACCOUNT]-(a:User) WHERE a.uuid = {user_id} RETURN m,r,a")
+    @Query("MATCH (m:Plant)<-[r:PLANTS]-(a:User) WHERE a.uuid = {user_id} RETURN m,r,a")
     Page<Plant> findByUserId(@Param("user_id") String user_id, Pageable pageable);
 }

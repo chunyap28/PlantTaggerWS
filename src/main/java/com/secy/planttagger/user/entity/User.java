@@ -6,6 +6,7 @@
 package com.secy.planttagger.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.*;
 import com.secy.planttagger.core.BaseEntity;
 
@@ -20,6 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.secy.planttagger.friend.entity.Friend;
 import com.secy.planttagger.user.GenderTypeConverter;
 import com.secy.planttagger.account.entity.Account;
+import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.plant.entity.Plant;
 import com.secy.planttagger.user.GenderType;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,12 +37,15 @@ public class User extends BaseEntity<User>
                   implements UserDetails{
                
     @NotEmpty
+    @JsonView(EntityView.List.class)
     protected String name;
     @Convert(GenderTypeConverter.class) protected GenderType gender = GenderType.unknown;
     protected byte[] profileImage;
     
     @NotEmpty @Email 
-    @Index(unique=true) protected String email;
+    @Index(unique=true) 
+    @JsonView(EntityView.List.class)
+    protected String email;
     
     @Index(unique=true) protected String facebookid;
     @Index(unique=true) protected String googleid;

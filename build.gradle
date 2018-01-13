@@ -1,0 +1,61 @@
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'com.secy.planttagger.Application'
+}
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+    }
+}
+
+group = 'secy'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'com.palantir.docker'
+
+jar {
+    baseName = 'plant-tagger'
+    version =  '0.1.1'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.spring.io/libs-milestone'
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    //compile("org.springframework.boot:spring-boot-starter-data-mongodb")
+    compile("org.springframework.data:spring-data-neo4j:4.2.4.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-mobile")    
+    compile("org.springframework.boot:spring-boot-starter-mail")
+    compile("org.springframework.boot:spring-boot-starter-amqp")
+    compile group: 'com.restfb', name: 'restfb', version: '1.6.9'
+    compile("org.springframework.social:spring-social-facebook")
+    //compile("org.springframework.security:spring-security-web:4.2.3.RELEASE")
+    compile("io.jsonwebtoken:jjwt:0.7.0")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+docker {
+    name "${project.group}/${jar.baseName}"
+    files jar.archivePath
+    buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}

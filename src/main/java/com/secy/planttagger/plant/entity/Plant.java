@@ -6,7 +6,10 @@
 package com.secy.planttagger.plant.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.secy.planttagger.common.fileservice.FileReference;
 import com.secy.planttagger.core.BaseEntity;
+import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.user.entity.User;
 import java.util.*;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -20,15 +23,21 @@ import org.neo4j.ogm.annotation.Relationship;
 @NodeEntity(label = "Plant")
 public class Plant extends BaseEntity<Plant>{
     
-    @NotEmpty protected String name;
-    protected byte[] profileImage;
+    @NotEmpty 
+    @JsonView(EntityView.List.class)
+    protected String name;
+    @JsonView(EntityView.List.class)
     protected Date since;
+    protected FileReference profileImage;
     
-    public Plant(String name, Date since, byte[] img)
+    
+    public Plant(){}
+    
+    public Plant(String name, Date since)
     {
+        setUuid(UUID.randomUUID().toString());
         this.name = name;
         this.since = since;
-        this.profileImage = img;
         setCreatedAt(new Date());
     }
 
@@ -49,14 +58,14 @@ public class Plant extends BaseEntity<Plant>{
     /**
      * @return the profileImage
      */
-    public byte[] getProfileImage() {
+    public FileReference getProfileImage() {
         return profileImage;
     }
 
     /**
      * @param profileImage the profileImage to set
      */
-    public void setProfileImage(byte[] profileImage) {
+    public void setProfileImage(FileReference profileImage) {
         this.profileImage = profileImage;
     }
     

@@ -5,6 +5,7 @@
  */
 package com.secy.planttagger.core;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.UUID;
 import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,10 +22,13 @@ import org.neo4j.ogm.annotation.Index;
 public class BaseEntity<T> extends Mapper<T>{
     
     @GraphId protected Long id;
-    @Index(unique=true) protected String uuid;
+    @Index(unique=true) 
+    @JsonView(EntityView.List.class)
+    protected String uuid;
+    //@JsonView(EntityView.List.class)
     protected Long createdAt;  
     
-    public Map<String, Object> toFilteredMap(List<String> keys)
+    public Map<String, Object> toFilteredMap(String... keys)
     {
         Map<String, Object> filteredMap = new HashMap<String, Object>();
         
@@ -51,7 +55,7 @@ public class BaseEntity<T> extends Mapper<T>{
 
     /**
      * @return the uuid
-     */
+     */    
     public String getUuid() {
         return uuid;
     }

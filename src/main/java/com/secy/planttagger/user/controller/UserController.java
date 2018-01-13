@@ -1,5 +1,7 @@
 package com.secy.planttagger.user.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.user.service.UserRegistrationService;
 import java.util.*;
 
@@ -42,8 +44,7 @@ public class UserController {
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        List<String> keys = Arrays.asList("uuid", "name", "email");
-        return new ResponseEntity<>(user.toFilteredMap(keys), HttpStatus.OK);
+        return new ResponseEntity<>(user.toFilteredMap("uuid", "name", "email"), HttpStatus.OK);
     }
     
     @RequestMapping(value = "", method = RequestMethod.POST, params={"type=FACEBOOK"})
@@ -55,20 +56,19 @@ public class UserController {
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        List<String> keys = Arrays.asList("uuid", "name", "email");
-        return new ResponseEntity<>(user.toFilteredMap(keys), HttpStatus.OK);
+        return new ResponseEntity<>(user.toFilteredMap("uuid", "name", "email"), HttpStatus.OK);
     }    
     
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<Map> getUser() 
+    @JsonView(EntityView.List.class)
+    public ResponseEntity<User> getUser() 
     {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        List<String> keys = Arrays.asList("uuid", "name", "email");
-        return new ResponseEntity<>(user.toFilteredMap(keys), HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/image", method = RequestMethod.GET)
@@ -79,8 +79,7 @@ public class UserController {
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        List<String> keys = Arrays.asList("profileImage");
-        return new ResponseEntity<>(user.toFilteredMap(keys), HttpStatus.OK);
+        return new ResponseEntity<>(user.toFilteredMap("profileImage"), HttpStatus.OK);
     }
     
     @InitBinder("ImageFile")
@@ -113,7 +112,6 @@ public class UserController {
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        List<String> keys = Arrays.asList("uuid", "name", "email");
-        return new ResponseEntity<>(user.toFilteredMap(keys), HttpStatus.OK);
+        return new ResponseEntity<>(user.toFilteredMap("uuid", "name", "email"), HttpStatus.OK);
     }
 }
