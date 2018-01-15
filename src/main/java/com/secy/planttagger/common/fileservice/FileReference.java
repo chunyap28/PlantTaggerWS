@@ -20,6 +20,9 @@ public class FileReference extends Mapper<FileObject>{
     protected String description;
     protected Long createdAt;
     
+    public FileReference(){
+    }
+    
     public FileReference(String name)
     {
         this.uuid = UUID.randomUUID().toString();

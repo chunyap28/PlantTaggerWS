@@ -8,6 +8,7 @@ package com.secy.planttagger.plant.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.secy.planttagger.common.fileservice.FileReference;
+import com.secy.planttagger.common.fileservice.FileReferenceConverter;
 import com.secy.planttagger.core.BaseEntity;
 import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.user.entity.User;
@@ -15,6 +16,7 @@ import java.util.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 
 /**
  *
@@ -28,6 +30,7 @@ public class Plant extends BaseEntity<Plant>{
     protected String name;
     @JsonView(EntityView.List.class)
     protected Date since;
+    @Convert(FileReferenceConverter.class)
     protected FileReference profileImage;
     
     

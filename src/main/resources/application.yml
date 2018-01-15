@@ -12,10 +12,9 @@ jwt:
       path: auth
       refresh: refresh
 
-#logging:
-#  level:
-#    org.springframework:
-#      security: DEBUG
+logging:
+  level.: ${LOG_LEVEL}
+
 facebook:
     #1422830621123522
     app_id: ${FACEBOOK_APPID}
@@ -23,7 +22,7 @@ facebook:
     app_secret: ${FACEBOOK_APPSECRET}
 
 planttagger:
-    uploadpath: /tmp/upload/
+    uploadpath: /data/file/
     
 spring:
     #data
