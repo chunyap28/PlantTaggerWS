@@ -16,7 +16,9 @@ import com.secy.planttagger.core.PasswordGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.security.SecureRandom;
 import java.util.UUID;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -113,4 +115,13 @@ public class Account extends BaseEntity<Account>{
         
         return randomPW;
     }   
+    
+    public RefreshToken generateToken(){
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[20];
+        random.nextBytes(bytes);
+        String token = new String(Base64.encodeBase64(bytes));
+        
+        return new RefreshToken(this, token, 30);
+    }
 }

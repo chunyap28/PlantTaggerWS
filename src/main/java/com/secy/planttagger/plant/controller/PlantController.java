@@ -10,6 +10,7 @@ import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.core.PtResponse;
 import com.secy.planttagger.plant.entity.Plant;
 import com.secy.planttagger.plant.service.PlantService;
+import com.secy.planttagger.plant.service.PlantImageService;
 import com.secy.planttagger.user.entity.User;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.secy.planttagger.common.fileservice.FileObject;
+import com.secy.planttagger.plant.entity.PlantImage;
 
 /**
  *
@@ -35,6 +37,7 @@ import com.secy.planttagger.common.fileservice.FileObject;
 public class PlantController {
     
     @Autowired private PlantService plantService;
+    @Autowired private PlantImageService plantImageService;
     
     /**
      * Add Plant
@@ -80,21 +83,65 @@ public class PlantController {
     {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
-        Plant plant = plantService.getById(id);
+        Plant plant = plantService.findByUuid(id);
         
         PtResponse response = new PtResponse("Success");
         response.setResult(plant);
         return response.toResponseEntity(HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/user/plant/{id}/image", method = RequestMethod.GET)
-    public ResponseEntity<Map> getPlantImageById(
+    @RequestMapping(value = "/user/plant/{id}/profile-image", method = RequestMethod.GET)
+    public ResponseEntity<Map> getProfileImageById(
             @PathVariable("id") String id
     )
     {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
-        FileObject img = plantService.getProfileImage(id);
+        Plant plant = plantService.findByUuid(id);
+        FileObject img = plantService.getProfileImage(plant);
+        
+        PtResponse response = new PtResponse("Success");
+        response.setResult(img);
+        return response.toResponseEntity(HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/user/plant/{id}/image", method = RequestMethod.POST)
+    public ResponseEntity<Map> addPlantImage(
+            @PathVariable("id") String id,
+            @RequestParam(value="img") MultipartFile img){
+        
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Plant plant = plantService.findByUuid(id);
+        PlantImage plantImg = plantImageService.addPlantImage(plant, img);
+        
+        PtResponse response = new PtResponse("Success");
+        response.setResult(plantImg);
+        return response.toResponseEntity(HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/user/plant/{id}/images", method = RequestMethod.GET)
+    public ResponseEntity<Map> getPlantImages(
+            @PathVariable("id") String id,
+            Pageable pageable){
+        
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Plant plant = plantService.findByUuid(id);
+        Page plantImgs = plantImageService.getPlantImages(id, pageable);
+
+        PtResponse response = new PtResponse("Success");
+        response.setPage(plantImgs);
+        return response.toResponseEntity(HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/user/plant/{id}/image/{img_id}", method = RequestMethod.GET)
+    public ResponseEntity<Map> getPlantImageById(
+            @PathVariable("id") String plant_id,
+            @PathVariable("img_id") String img_id
+    )
+    {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        FileObject img = plantImageService.getById(img_id);
         
         PtResponse response = new PtResponse("Success");
         response.setResult(img);

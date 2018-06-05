@@ -21,6 +21,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.secy.planttagger.friend.entity.Friend;
 import com.secy.planttagger.user.GenderTypeConverter;
 import com.secy.planttagger.account.entity.Account;
+import com.secy.planttagger.common.fileservice.FileReference;
+import com.secy.planttagger.common.fileservice.FileReferenceConverter;
 import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.plant.entity.Plant;
 import com.secy.planttagger.user.GenderType;
@@ -40,7 +42,7 @@ public class User extends BaseEntity<User>
     @JsonView(EntityView.List.class)
     protected String name;
     @Convert(GenderTypeConverter.class) protected GenderType gender = GenderType.unknown;
-    protected byte[] profileImage;
+    @Convert(FileReferenceConverter.class) protected FileReference profileImage;
     
     @NotEmpty @Email 
     @Index(unique=true) 
@@ -90,14 +92,14 @@ public class User extends BaseEntity<User>
     /**
      * @return the profileImage
      */
-    public byte[] getProfileImage() {
+    public FileReference getProfileImage() {
         return profileImage;
     }
 
     /**
      * @param profileImage the profileImage to set
      */
-    public void setProfileImage(byte[] profileImage) {
+    public void setProfileImage(FileReference profileImage) {
         this.profileImage = profileImage;
     }
 

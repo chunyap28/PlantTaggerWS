@@ -17,13 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.secy.planttagger.common.fileservice.*;
+import org.springframework.security.access.prepost.PostAuthorize;
 
 /**
  *
  * @author chunyap
  */
 @Service("PlantService")
-public class PlantService {
+public class PlantService{
     
     @Autowired private PlantRepository plantRepository;
     @Autowired private FileService fileService;
@@ -49,16 +50,21 @@ public class PlantService {
             throw new SaveFileException();
         }
     }
-    
-    public Plant getById(String uuid)
+
+    @PostAuthorize ("returnObject.owner == authentication.name")
+    public Plant findByUuid(String uuid)
     {
-        return plantRepository.findByUuid(uuid);
+        Plant plant = plantRepository.findByUuid(uuid);
+        if( plant == null ){
+            throw new PlantNotFoundException();
+        }
+        
+        return plant;
     }
     
-    public FileObject getProfileImage(String uuid)
+    public FileObject getProfileImage(Plant plant)
     {
-        try{
-            Plant plant = this.getById(uuid);
+        try{            
             return fileService.retrieve(plant.getProfileImage());
         }
         catch(IOException e)

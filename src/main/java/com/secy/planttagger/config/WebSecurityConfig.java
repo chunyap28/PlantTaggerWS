@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Autowired
@@ -68,6 +68,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new PasswordAuthenticationFilter(authenticationManager());
     }
     
+    @Bean
+    public RefreshTokenAuthenticationFilter refreshTokenAuthenticationFilter() throws Exception {
+        return new RefreshTokenAuthenticationFilter(authenticationManager());
+    }
+    
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
       
@@ -87,6 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
           httpSecurity
                   .addFilterBefore(facebookTokenAuthenticationFilterBean(), UsernamePasswordAuthenticationFilter.class) //facebook login
                   .addFilterBefore(passwordAuthenticationFilterBean(), UsernamePasswordAuthenticationFilter.class) //password login
+                  .addFilterBefore(refreshTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) //refresh token login
                   .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
           // disable page caching

@@ -5,6 +5,8 @@
  */
 package com.secy.planttagger.auth.controller;
 
+import com.secy.planttagger.account.entity.RefreshToken;
+import com.secy.planttagger.account.service.AccountService;
 import com.secy.planttagger.auth.JwtTokenUtil;
 import com.secy.planttagger.user.entity.User;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class AuthController {
  
     //@Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtTokenUtil jwtTokenUtil;
+    @Autowired private AccountService accountServ;
     //@Autowired private UserDetailsService userDetailsService;
     
     @RequestMapping(value = "", method = RequestMethod.POST, params={"type=PASSWORD"})
@@ -38,6 +41,12 @@ public class AuthController {
     
     @RequestMapping(value = "", method = RequestMethod.POST, params={"type=FACEBOOK"})
     public ResponseEntity<Map> loginViaFacebook(Device device)
+    {
+        return generateToken(device);
+    }
+    
+    @RequestMapping(value = "", method = RequestMethod.POST, params={"type=REFRESH"})
+    public ResponseEntity<Map> refresh(Device device)
     {
         return generateToken(device);
     }
@@ -58,9 +67,11 @@ public class AuthController {
     {
         final User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final String token = jwtTokenUtil.generateToken(userDetails, device);
+        final RefreshToken refreshToken = accountServ.generateToken(userDetails.getUsername());
 
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
+        map.put("refreshToken", refreshToken);
         
         return new ResponseEntity<>(map, HttpStatus.OK); 
     }

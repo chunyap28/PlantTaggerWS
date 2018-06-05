@@ -1,6 +1,7 @@
 package com.secy.planttagger.user.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.secy.planttagger.common.fileservice.FileObject;
 import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.user.service.UserRegistrationService;
 import java.util.*;
@@ -79,7 +80,10 @@ public class UserController {
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        return new ResponseEntity<>(user.toFilteredMap("profileImage"), HttpStatus.OK);
+        FileObject img = userServ.getProfileImage(user);
+        PtResponse response = new PtResponse("Success");
+        response.setResult(img);
+        return response.toResponseEntity(HttpStatus.OK);
     }
     
     @InitBinder("ImageFile")

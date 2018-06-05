@@ -1,0 +1,7 @@
+build/
+.gradle/
+.nb-gradle/
+gradle/
+gradlew
+gradlew.bat
+manifest.mf

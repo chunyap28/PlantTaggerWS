@@ -13,7 +13,7 @@ jwt:
       refresh: refresh
 
 logging:
-  level.: ${LOG_LEVEL}
+  level.: ${PT_LOG_LEVEL}
 
 facebook:
     #1422830621123522
@@ -29,11 +29,11 @@ spring:
     data:
         neo4j:
             #http://localhost:7474
-            URI: ${DB_HOST}
+            URI: ${PT_DB_HOST}
             #neo4j
-            username: ${DB_USERNAME}
+            username: ${PT_DB_USERNAME}
             #neo4j123
-            password: ${DB_PASSWORD}
+            password: ${PT_DB_PASSWORD}
     #mail
     mail:
         #smtp.gmail.com

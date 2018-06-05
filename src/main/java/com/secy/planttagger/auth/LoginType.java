@@ -8,6 +8,7 @@ package com.secy.planttagger.auth;
 public enum LoginType{ 
     PASSWORD("PASSWORD"),
     FACEBOOK("FACEBOOK"),
+    REFRESH("REFRESH"),
     GOOGLE("GOOGLE");  
     
     final private String value;

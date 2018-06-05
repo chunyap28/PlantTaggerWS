@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import com.secy.planttagger.account.repository.AccountRepository;
 import com.secy.planttagger.account.entity.Account;
+import com.secy.planttagger.common.fileservice.FileObject;
+import com.secy.planttagger.common.fileservice.FileReference;
+import com.secy.planttagger.common.fileservice.FileService;
+import com.secy.planttagger.exception.RetrieveFileException;
 import com.secy.planttagger.exception.UserNotFoundException;
 import com.secy.planttagger.exception.SaveFileException;
 import com.secy.planttagger.user.entity.User;
@@ -27,6 +31,7 @@ public class UserService implements UserDetailsService{
     
     @Autowired private UserRepository userRepository;
     @Autowired private AccountRepository accountRepository;
+    @Autowired private FileService fileService;
     
     public User getById(String uuid)
     {
@@ -52,10 +57,23 @@ public class UserService implements UserDetailsService{
         return user;
     }
     
+    public FileObject getProfileImage(User user)
+    {
+        try{            
+            return fileService.retrieve(user.getProfileImage());
+        }
+        catch(IOException e)
+        {
+            throw new RetrieveFileException();
+        }
+    }
+    
     public boolean uploadProfileImage(User user, MultipartFile file)
     {
         try{
-            user.setProfileImage(file.getBytes());
+            FileReference fref = new FileReference(user.getName());
+            fileService.upload(fref, file.getBytes());
+            user.setProfileImage(fref);
             userRepository.save(user);
             return true;
         }

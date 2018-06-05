@@ -103,4 +103,17 @@ public class Plant extends BaseEntity<Plant>{
     public void setSince(Date since) {
         this.since = since;
     }
+    
+    @Relationship(type = "BELONGS_TO", direction=Relationship.INCOMING)
+    private Set<PlantImage> plantImages = new HashSet<>();
+    
+    @Relationship(type = "BELONGS_TO", direction=Relationship.INCOMING)
+    public Set<PlantImage> getPlantImages()
+    {
+        return this.plantImages;
+    }
+    
+    public String getOwner() {
+        return this.user.getEmail();
+    }
 }
