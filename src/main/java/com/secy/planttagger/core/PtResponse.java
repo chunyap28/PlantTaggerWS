@@ -82,18 +82,16 @@ public class PtResponse{
         this.response.put("result", result);
     }
         
-    public final void setPage(Page<BaseEntity> page) {  
+    public final void setPage(Page<BaseEntity> page) {
        this.response.put("result", page.getContent());
        this.response.put("totalElements", page.getTotalElements());
        this.response.put("totalPages", page.getTotalPages());
+       this.response.put("page", page.getNumber());
        this.response.put("size", page.getSize());
     }
     
-    public final void setPage(Page<BaseEntity> page, String keys) {  
-       this.response.put("result", page.getContent());
-       this.response.put("totalElements", page.getTotalElements());
-       this.response.put("totalPages", page.getTotalPages());
-       this.response.put("size", page.getSize());
+    public final void setPage(Page<BaseEntity> page, String keys) { 
+       this.setPage(page);       
     }
     
     /**
