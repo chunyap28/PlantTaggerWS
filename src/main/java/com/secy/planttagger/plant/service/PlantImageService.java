@@ -56,7 +56,7 @@ public class PlantImageService {
     {
         try{
             PlantImage plantImg = plantImageRepository.findByUuid(imageId);
-            return fileService.retrieve(plantImg.getImage());
+            return fileService.retrieve(plantImg.getReference());
         }
         catch(IOException e)
         {

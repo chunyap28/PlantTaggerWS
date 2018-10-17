@@ -22,6 +22,9 @@ public class FileService {
     
     public void upload(FileReference reference, byte[] content) throws IOException
     {
+        System.out.println("Working Directory = " +
+              System.getProperty("user.dir"));
+        
         Path path = Paths.get(basepath + reference.getUuid());
         Files.write(path, content);       
     }

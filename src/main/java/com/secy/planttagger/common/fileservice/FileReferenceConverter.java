@@ -22,12 +22,20 @@ public class FileReferenceConverter implements AttributeConverter<FileReference,
 
     @Override
     public String toGraphProperty(FileReference t) {
+        if( t == null ){
+            return null;
+        }
+        
         return t.toJson();
     }
 
     @Override
     public FileReference toEntityAttribute(String f) {
         try {
+            if( f.isEmpty() ){
+                return new FileReference();
+            }
+            
             FileReference t = FileReference.fromJson(f, FileReference.class);
             return t;
         } catch (JsonMappingException ex) {

@@ -23,28 +23,28 @@ import org.neo4j.ogm.annotation.typeconversion.Convert;
 public class PlantImage extends BaseEntity<Plant>{
     
     @Convert(FileReferenceConverter.class)
-    protected FileReference image;
+    protected FileReference reference;
 
     public PlantImage(){}
     
     public PlantImage(FileReference fileReference){
         this.uuid = UUID.randomUUID().toString();
-        this.image = fileReference;
+        this.reference = fileReference;
         setCreatedAt(new Date());
     }
 
     /**
      * @return the image
      */
-    public FileReference getImage() {
-        return image;
+    public FileReference getReference() {
+        return reference;
     }
 
     /**
-     * @param image the profileImage to set
+     * @param reference the profileImage to set
      */
-    public void setImage(FileReference image) {
-        this.image = image;
+    public void setReference(FileReference reference) {
+        this.reference = reference;
     }
     
     @Relationship(type = "BELONGS_TO", direction = Relationship.OUTGOING)
