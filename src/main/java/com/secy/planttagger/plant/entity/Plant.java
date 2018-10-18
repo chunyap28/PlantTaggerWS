@@ -113,6 +113,7 @@ public class Plant extends BaseEntity<Plant>{
         return this.plantImages;
     }
     
+    @JsonIgnore
     public String getOwner() {
         return this.user.getEmail();
     }

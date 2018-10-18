@@ -147,4 +147,15 @@ public class PlantController {
         response.setResult(img);
         return response.toResponseEntity(HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/user/plant/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Map> deletePlantById(
+            @PathVariable("id") String id
+    ){
+        Plant plant = plantService.findByUuid(id);
+        plantService.deletePlant(plant);
+        
+        PtResponse response = new PtResponse("Success");
+        return response.toResponseEntity(HttpStatus.OK);
+    }
 }

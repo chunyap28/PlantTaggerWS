@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.secy.planttagger.common.fileservice.*;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.*;
 
 /**
  *
@@ -74,7 +74,11 @@ public class PlantService{
     }
     
     public Page<Plant> getByUserId(String userId, Pageable page)
-    {
+    {        
         return plantRepository.findByUserId(userId, page);
+    }
+    
+    public void deletePlant(Plant plant){
+        plantRepository.delete(plant);
     }
 }
