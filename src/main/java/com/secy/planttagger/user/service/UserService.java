@@ -57,6 +57,11 @@ public class UserService implements UserDetailsService{
         return user;
     }
     
+    public User updateProfile(User user){
+        //TODO Validation
+        return userRepository.save(user);
+    }
+    
     public FileObject getProfileImage(User user)
     {
         try{            

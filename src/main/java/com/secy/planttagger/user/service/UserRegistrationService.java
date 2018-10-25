@@ -7,6 +7,8 @@ package com.secy.planttagger.user.service;
 
 import com.secy.planttagger.common.fileservice.FileReference;
 import com.secy.planttagger.common.fileservice.FileService;
+import com.secy.planttagger.country.entity.Country;
+import com.secy.planttagger.country.service.CountryService;
 import com.secy.planttagger.exception.SaveFileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,10 @@ import com.secy.planttagger.user.GenderType;
 import com.secy.planttagger.user.entity.User;
 import com.secy.planttagger.exception.UserNotFoundException;
 import com.secy.planttagger.exception.UserExistsException;
+import com.secy.planttagger.user.event.UserCreatedEvent;
 import com.secy.planttagger.user.repository.UserRepository;
 import java.io.IOException;
+import org.springframework.context.ApplicationEventPublisher;
 
 /**
  *
@@ -27,10 +31,14 @@ public class UserRegistrationService {
     
     @Autowired private UserRepository userRepository;
     @Autowired private FileService fileService;
+    @Autowired private CountryService countryService;
+    @Autowired private ApplicationEventPublisher applicationEventPublisher;
         
-    public User registerViaEmail(String name, String email, String password)
+    public User registerViaEmail(String name, String email, String password, String countryCode)
     {
+        Country country = countryService.getByCode(countryCode);        
         User user  = new User(name, email);
+        user.setCountry(country);
         return createUser(user, password);        
     }
    
@@ -46,7 +54,7 @@ public class UserRegistrationService {
             System.out.format(fbUser.toString());
 
             User user = new User(fbUser.getName(), fbUser.getEmail());
-            user.setFacebookid(fbUser.getId());        
+            user.setFacebookid(fbUser.getId()); 
             user.setGender(GenderType.male);
 
             FileReference fref = new FileReference(user.getName());
@@ -71,6 +79,7 @@ public class UserRegistrationService {
         
         //save user
         userRepository.save(user);
+        applicationEventPublisher.publishEvent(new UserCreatedEvent(this, user));
         return user;
     }
 }

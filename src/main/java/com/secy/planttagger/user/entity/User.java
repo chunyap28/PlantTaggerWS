@@ -24,6 +24,7 @@ import com.secy.planttagger.account.entity.Account;
 import com.secy.planttagger.common.fileservice.FileReference;
 import com.secy.planttagger.common.fileservice.FileReferenceConverter;
 import com.secy.planttagger.core.EntityView;
+import com.secy.planttagger.country.entity.Country;
 import com.secy.planttagger.plant.entity.Plant;
 import com.secy.planttagger.user.GenderType;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,15 +50,20 @@ public class User extends BaseEntity<User>
     @JsonView(EntityView.List.class)
     protected String email;
     
-    @Index(unique=true) protected String facebookid;
-    @Index(unique=true) protected String googleid;
+    
+    @Index(unique=true) @JsonIgnore protected String facebookid;
+    @Index(unique=true) @JsonIgnore protected String googleid;
+    
+    @JsonView(EntityView.List.class)
+    private String gardenName;
 
     public User() {}
 
     public User(String name, String email) {
         setUuid(UUID.randomUUID().toString());
-        setName(name);
-        setEmail(email);        
+        this.name = name;
+        this.email = email;
+        this.gardenName = this.name + "'s garden";     
         setCreatedAt(new Date());
     }
     
@@ -144,8 +150,23 @@ public class User extends BaseEntity<User>
     public void setGender(GenderType gender) {
         this.gender = gender;
     }
-            
+    
+    /**
+     * @return the gardenName
+     */
+    public String getGardenName() {
+        return gardenName;
+    }
+
+    /**
+     * @param gardenName the gardenName to set
+     */
+    public void setGardenName(String gardenName) {
+        this.gardenName = gardenName;
+    }
+
     @Relationship(type = "FRIEND", direction = Relationship.UNDIRECTED)
+    @JsonIgnore
     private List<Friend> friends = new ArrayList<>();
 
     public List<Friend> getFriends()
@@ -158,6 +179,7 @@ public class User extends BaseEntity<User>
     } 
     
     @Relationship(type = "PLANTS", direction = Relationship.OUTGOING)
+    @JsonIgnore
     private List<Plant> plants = new ArrayList<>();
 
     public List<Plant> getPlants()
@@ -166,6 +188,7 @@ public class User extends BaseEntity<User>
     }
     
     @Relationship(type = "HAS_PUBLIC_ACCOUNT", direction=Relationship.OUTGOING)
+    @JsonIgnore
     private Set<Account> publicAccounts = new HashSet<>();
     
     @Relationship(type = "HAS_PUBLIC_ACCOUNT", direction=Relationship.OUTGOING)
@@ -199,6 +222,17 @@ public class User extends BaseEntity<User>
           
         this.getPublicAccounts().add(account);
     }
+    
+    @Relationship(type = "IS_IN", direction = Relationship.OUTGOING)
+    private Country country;
+
+    public void setCountry(Country country){
+        this.country = country;
+    }
+    
+    public Country getCountry(){
+        return this.country;
+    }    
 
     @Override
     @JsonIgnore

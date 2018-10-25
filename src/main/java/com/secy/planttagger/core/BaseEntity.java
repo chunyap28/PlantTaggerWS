@@ -5,6 +5,7 @@
  */
 package com.secy.planttagger.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.UUID;
 import java.util.*;
@@ -21,7 +22,7 @@ import org.neo4j.ogm.annotation.Index;
 @NodeEntity
 public class BaseEntity<T> extends Mapper<T>{
     
-    @GraphId protected Long id;
+    @GraphId @JsonIgnore protected Long id;
     @Index(unique=true) 
     @JsonView(EntityView.List.class)
     protected String uuid;

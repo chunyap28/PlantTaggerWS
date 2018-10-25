@@ -10,5 +10,6 @@ package com.secy.planttagger.core;
  * @author chunyap
  */
 public class EntityView {
+    //public interface Detail{}
     public interface List{}
 }

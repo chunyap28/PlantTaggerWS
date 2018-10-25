@@ -31,6 +31,7 @@ public class FileService {
     
     public FileObject retrieve(FileReference reference) throws IOException
     {
+        System.out.println("Getting File = " + reference.getUuid());
         Path path = Paths.get(basepath + reference.getUuid());
         
         return new FileObject(reference, Files.readAllBytes(path));

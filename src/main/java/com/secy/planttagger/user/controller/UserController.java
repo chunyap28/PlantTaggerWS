@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import org.springframework.validation.BindingResult;
 import com.secy.planttagger.core.PtResponse;
+import com.secy.planttagger.user.GenderType;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -38,14 +39,15 @@ public class UserController {
     public ResponseEntity<Map> registerViaPASSWORD(
             @RequestParam(value="name") String name, 
             @RequestParam(value="email") String email,
-            @RequestParam(value="password") String password) 
+            @RequestParam(value="password") String password,
+            @RequestParam(value="countrycode") String countryCode) 
     {
-        User user = serv.registerViaEmail(name, email, password);
+        User user = serv.registerViaEmail(name, email, password, countryCode);
         
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        return new ResponseEntity<>(user.toFilteredMap("uuid", "name", "email"), HttpStatus.OK);
+        return new ResponseEntity<>(user.toFilteredMap("uuid", "name", "email", "country"), HttpStatus.OK);
     }
     
     @RequestMapping(value = "", method = RequestMethod.POST, params={"type=FACEBOOK"})
@@ -61,7 +63,7 @@ public class UserController {
     }    
     
     @RequestMapping(value = "", method = RequestMethod.GET)
-    @JsonView(EntityView.List.class)
+    //@JsonView(EntityView.List.class)
     public ResponseEntity<User> getUser() 
     {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
@@ -69,9 +71,26 @@ public class UserController {
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
+        User userDetail = userServ.getById(user.getUuid());
+        return new ResponseEntity<>(userDetail, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    public ResponseEntity<User> updateUser(
+            @RequestParam(value="name") String name, 
+            @RequestParam(value="gender") GenderType gender,
+            @RequestParam(value="gardenname") String gardenName) 
+    {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    
+        user.setName(name);
+        user.setGender(gender);
+        user.setGardenName(gardenName);
+        userServ.updateProfile(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
     
+    //remove this...
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     public ResponseEntity<Map> getUserImage() 
     {
@@ -92,7 +111,7 @@ public class UserController {
     }
     
     @RequestMapping(value = "/image", method = RequestMethod.POST)
-    public ResponseEntity<Map> saveUserImage(@Valid @ModelAttribute("ImageFile") ImageFile file,
+    public ResponseEntity<Map> updateProfileImage(@Valid @ModelAttribute("ImageFile") ImageFile file,
                                              BindingResult binding) 
     {
         if(binding.hasErrors()){
@@ -100,11 +119,10 @@ public class UserController {
         }
         
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
     
         userServ.uploadProfileImage(user, file.getImg());
         return new PtResponse("Success").toResponseEntity(HttpStatus.OK);
-    }
+    }        
     
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
