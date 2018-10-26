@@ -10,6 +10,6 @@ package com.secy.planttagger.core;
  * @author chunyap
  */
 public class EntityView {
-    //public interface Detail{}
-    public interface List{}
+    public static class List {}
+    public static class Detail extends List {}  //detail view includes everything in list
 }

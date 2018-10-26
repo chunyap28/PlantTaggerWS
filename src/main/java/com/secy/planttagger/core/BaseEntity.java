@@ -25,9 +25,9 @@ public class BaseEntity<T> extends Mapper<T>{
     @GraphId @JsonIgnore protected Long id;
     @Index(unique=true) 
     @JsonView(EntityView.List.class)
-    protected String uuid;
-    //@JsonView(EntityView.List.class)
-    protected Long createdAt;  
+    protected String uuid;    
+    protected Long createdAt;
+    private Long updatedAt;
     
     public Map<String, Object> toFilteredMap(String... keys)
     {
@@ -82,5 +82,25 @@ public class BaseEntity<T> extends Mapper<T>{
      */
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt.getTime();
+    }
+
+    /**
+     * @return the updatedAt
+     */
+    public Date getUpdatedAt() {
+        if( updatedAt == null ){
+            return null;
+        }
+        
+        Date date = new Date();
+        date.setTime(updatedAt);
+        return date;
+    }
+
+    /**
+     * @param updatedAt the updatedAt to set
+     */
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt.getTime();
     }
 }

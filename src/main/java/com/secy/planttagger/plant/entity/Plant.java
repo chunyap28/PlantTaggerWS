@@ -11,6 +11,7 @@ import com.secy.planttagger.common.fileservice.FileReference;
 import com.secy.planttagger.common.fileservice.FileReferenceConverter;
 import com.secy.planttagger.core.BaseEntity;
 import com.secy.planttagger.core.EntityView;
+import com.secy.planttagger.post.entity.Post;
 import com.secy.planttagger.user.entity.User;
 import java.util.*;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -31,6 +32,7 @@ public class Plant extends BaseEntity<Plant>{
     @JsonView(EntityView.List.class)
     protected Date since;
     @Convert(FileReferenceConverter.class)
+    @JsonView(EntityView.List.class)
     protected FileReference profileImage;
     
     

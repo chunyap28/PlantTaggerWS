@@ -6,7 +6,8 @@ jwt:
   header: Authorization
   #mySecret
   secret: ${JWT_SECRET}
-  expiration: 604800
+  #5 mins
+  expiration: 3000
   route:
     authentication:
       path: auth

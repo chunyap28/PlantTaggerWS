@@ -17,10 +17,13 @@ import com.secy.planttagger.user.GenderType;
 import com.secy.planttagger.user.entity.User;
 import com.secy.planttagger.exception.UserNotFoundException;
 import com.secy.planttagger.exception.UserExistsException;
+import com.secy.planttagger.facebookclient.PlantTaggerFacebookClient.FbUser;
 import com.secy.planttagger.user.event.UserCreatedEvent;
 import com.secy.planttagger.user.repository.UserRepository;
 import java.io.IOException;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.social.facebook.api.Location;
+import org.springframework.social.facebook.api.Reference;
 
 /**
  *
@@ -36,7 +39,7 @@ public class UserRegistrationService {
         
     public User registerViaEmail(String name, String email, String password, String countryCode)
     {
-        Country country = countryService.getByCode(countryCode);        
+        Country country = countryService.getByCode(countryCode);
         User user  = new User(name, email);
         user.setCountry(country);
         return createUser(user, password);        
@@ -48,15 +51,19 @@ public class UserRegistrationService {
             throw new UserNotFoundException();
         
         try{
-            org.springframework.social.facebook.api.User fbUser = PlantTaggerFacebookClient.fetchUserInformation(token);
+            FbUser fbUser = PlantTaggerFacebookClient.fetchUserInformation(token);
         
             //get name, email
-            System.out.format(fbUser.toString());
+            //System.out.println("FBUser Gender: " + fbUser.getGender());
+            //System.out.println("FBUser Location: " + fbUser.getCountryCode());
 
             User user = new User(fbUser.getName(), fbUser.getEmail());
-            user.setFacebookid(fbUser.getId()); 
-            user.setGender(GenderType.male);
-
+            user.setFacebookid(fbUser.getId());             
+            user.setGender(GenderType.valueOf(fbUser.getGender()));
+            String countryCode = fbUser.getCountryCode();
+            if(countryCode != null){
+                this.setCountry(user, countryCode);
+            }
             FileReference fref = new FileReference(user.getName());
             fileService.upload(fref, PlantTaggerFacebookClient.fetchUserProfileImage(token));
             user.setProfileImage(fref);
@@ -80,6 +87,12 @@ public class UserRegistrationService {
         //save user
         userRepository.save(user);
         applicationEventPublisher.publishEvent(new UserCreatedEvent(this, user));
+        return user;
+    }
+    
+    protected User setCountry(User user, String countryCode){
+        Country country = countryService.getByCode(countryCode);
+        user.setCountry(country);
         return user;
     }
 }

@@ -16,8 +16,11 @@ import org.springframework.social.oauth2.OAuth2Operations;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.social.facebook.api.Location;
 
 /**
  *
@@ -47,11 +50,12 @@ public class PlantTaggerFacebookClient {
         return detail.getData().getIsValid();
     }
     
-    public static User fetchUserInformation(String userToken) {
+    public static FbUser fetchUserInformation(String userToken) {
         Facebook facebook = new FacebookTemplate(userToken);
+        String [] fields = { "id", "email",  "name", "gender", "location{location{country_code}}"};
+        String json = facebook.fetchObject("me", String.class, fields);
 
-        String [] fields = { "id", "email",  "name", "gender" };
-        return facebook.fetchObject("me", User.class, fields);                
+        return facebook.fetchObject("me", FbUser.class, fields);                
     }
 
     public static byte[] fetchUserProfileImage(String userToken){
@@ -89,5 +93,61 @@ public class PlantTaggerFacebookClient {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static final class FbUser {
+        @JsonProperty("id") private String id;
+        @JsonProperty("gender") private String gender;        
+        @JsonProperty("name") private String name;        
+        @JsonProperty("email") private String email;
+        @JsonProperty("location") private Location location;
+        
+        /**
+         * @return the gender
+         */
+        public String getGender(){
+            return gender;
+        }
+
+        /**
+         * @return the id
+         */
+        public String getId() {
+            return id;
+        }
+
+        /**
+         * @return the name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * @return the email
+         */
+        public String getEmail() {
+            return email;
+        }
+
+        /**
+         * @return the location
+         */
+        public Location getLocation() {
+            return location;
+        }
+        
+        public String getCountryCode(){
+            if( location == null ){
+                return null;
+            }
+            
+            HashMap map = (LinkedHashMap) location.getExtraData().get("location");
+            if( map == null ){
+                return null;
+            }
+            
+            return (String) map.get("country_code");
+        }        
+    }
     
 }

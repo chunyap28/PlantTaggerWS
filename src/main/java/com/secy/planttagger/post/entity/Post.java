@@ -15,7 +15,9 @@ import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.plant.entity.Plant;
 import com.secy.planttagger.user.entity.User;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
@@ -33,15 +35,22 @@ public class Post extends BaseEntity<Post>{
     protected String context;
     
     @Convert(FileReferenceConverter.class)
+    @JsonView(EntityView.List.class)
     protected FileReference image;
     
     public Post(){}
+    
+    public Post(String context){
+        setUuid(UUID.randomUUID().toString());
+        setCreatedAt(new Date());
+        this.context = context;
+    }
     
     public void setContext(String context){
         this.context = context;
     }
     
-    public String getContent(){
+    public String getContext(){
         return this.context;
     }
 
@@ -93,5 +102,10 @@ public class Post extends BaseEntity<Post>{
     @JsonIgnore
     public User getUser(){
         return this.user;
+    }
+    
+    @JsonIgnore
+    public String getOwner() {
+        return this.user.getEmail();
     }
 }

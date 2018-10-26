@@ -5,6 +5,8 @@
  */
 package com.secy.planttagger.common.fileservice;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.core.Mapper;
 import java.util.Date;
 import java.util.UUID;
@@ -15,9 +17,13 @@ import java.util.UUID;
  */
 public class FileReference extends Mapper<FileObject>{
     
+    @JsonView(EntityView.List.class)
     protected String uuid;
+    @JsonView(EntityView.List.class)
     protected String name;
+    @JsonView(EntityView.List.class)
     protected String description;
+    @JsonView(EntityView.List.class)
     protected Long createdAt;
     
     public FileReference(){

@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import com.secy.planttagger.facebookclient.PlantTaggerFacebookClient;
+import com.secy.planttagger.facebookclient.PlantTaggerFacebookClient.FbUser;
 import com.secy.planttagger.user.service.UserService;
 import com.secy.planttagger.helper.UrlAndPostParamMatcher;
 import com.secy.planttagger.user.entity.User;
@@ -53,7 +54,7 @@ public class FacebookTokenAuthenticationFilter extends AbstractAuthenticationPro
         String inputToken = request.getParameter("token");
         if( PlantTaggerFacebookClient.validateUserToken(inputToken))
         {
-            org.springframework.social.facebook.api.User fbuser = PlantTaggerFacebookClient.fetchUserInformation(inputToken);
+            FbUser fbuser = PlantTaggerFacebookClient.fetchUserInformation(inputToken);
             if( fbuser == null )
                 throw new AuthenticationServiceException("Cannot fetch facebook user");
                 

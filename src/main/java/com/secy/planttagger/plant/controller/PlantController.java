@@ -77,6 +77,7 @@ public class PlantController {
     }
     
     @RequestMapping(value = "/user/plant/{id}", method = RequestMethod.GET)
+    @JsonView(EntityView.Detail.class)
     public ResponseEntity<Map> getPlantById(
             @PathVariable("id") String id
     )
