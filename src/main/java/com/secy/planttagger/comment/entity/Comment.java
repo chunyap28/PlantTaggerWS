@@ -58,7 +58,7 @@ public class Comment extends BaseEntity<Comment>{
     }
     
     @Relationship(type = "WRITES", direction = Relationship.INCOMING)
-    @JsonIgnore
+    @JsonView(EntityView.List.class)
     private User user;
     
     @JsonIgnore

@@ -63,7 +63,7 @@ public class Post extends BaseEntity<Post>{
     }
     
     @Relationship(type = "ABOUTS", direction = Relationship.OUTGOING)
-    @JsonIgnore
+    @JsonView(EntityView.List.class)
     private Plant plant;
     
     @JsonIgnore
@@ -92,7 +92,7 @@ public class Post extends BaseEntity<Post>{
     }
     
     @Relationship(type = "WRITES", direction = Relationship.INCOMING)
-    @JsonIgnore
+    @JsonView(EntityView.List.class)
     private User user;
     
     @JsonIgnore

@@ -16,4 +16,6 @@ public interface PostRepository extends BaseRepository<Post>
 {
     @Query("MATCH (c:Comment)-[r1:ABOUTS]->(m:Post)-[r2:ABOUTS]->(a:Plant) WHERE a.uuid = {plant_id} RETURN m,r1,r2,a,c")
     Page<Post> findByPlantId(@Param("plant_id") String plantId, Pageable pageable);
+    
+    Page<Post> findAllOrderByCreatedAt(Pageable pageable);
 }
