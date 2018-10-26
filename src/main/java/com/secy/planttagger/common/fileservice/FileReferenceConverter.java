@@ -6,10 +6,7 @@
 package com.secy.planttagger.common.fileservice;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.secy.planttagger.common.emailservice.EmailObject;
-import com.secy.planttagger.common.emailservice.SendEmailService;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.neo4j.ogm.typeconversion.AttributeConverter;

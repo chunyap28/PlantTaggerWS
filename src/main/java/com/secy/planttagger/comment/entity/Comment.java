@@ -11,6 +11,8 @@ import com.secy.planttagger.core.BaseEntity;
 import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.post.entity.Post;
 import com.secy.planttagger.user.entity.User;
+import java.util.Date;
+import java.util.UUID;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
@@ -27,11 +29,17 @@ public class Comment extends BaseEntity<Comment>{
     
     public Comment(){}
     
+    public Comment(String context){
+        setUuid(UUID.randomUUID().toString());
+        setCreatedAt(new Date());
+        this.context = context;
+    }
+
     public void setContext(String context){
         this.context = context;
     }
     
-    public String getContent(){
+    public String getContext(){
         return this.context;
     }
     
@@ -61,5 +69,10 @@ public class Comment extends BaseEntity<Comment>{
     @JsonIgnore
     public User getUser(){
         return this.user;
+    }
+    
+    @JsonIgnore
+    public String getOwner() {
+        return this.user.getEmail();
     }
 }

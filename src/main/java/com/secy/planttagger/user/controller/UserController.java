@@ -5,7 +5,6 @@ import com.secy.planttagger.common.fileservice.FileObject;
 import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.user.service.UserRegistrationService;
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +35,8 @@ public class UserController {
     @Autowired private ImageFileValidator imgFileValidator;
     
     @RequestMapping(value = "", method = RequestMethod.POST, params={"type=PASSWORD"})
-    public ResponseEntity<Map> registerViaPASSWORD(
+    @JsonView(EntityView.Detail.class)
+    public ResponseEntity<User> registerViaPASSWORD(
             @RequestParam(value="name") String name, 
             @RequestParam(value="email") String email,
             @RequestParam(value="password") String password,
@@ -47,11 +47,12 @@ public class UserController {
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        return new ResponseEntity<>(user.toFilteredMap("uuid", "name", "email", "country"), HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
     
     @RequestMapping(value = "", method = RequestMethod.POST, params={"type=FACEBOOK"})
-    public ResponseEntity<Map> registerViaFacebook(
+    @JsonView(EntityView.Detail.class)
+    public ResponseEntity<User> registerViaFacebook(
         @RequestParam(value="token") String token)
     {
         User user = serv.registerViaFacebook(token);
@@ -59,11 +60,11 @@ public class UserController {
         if( user == null )
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);        
         
-        return new ResponseEntity<>(user.toFilteredMap("uuid", "name", "email"), HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }    
     
     @RequestMapping(value = "", method = RequestMethod.GET)
-    //@JsonView(EntityView.List.class)
+    @JsonView(EntityView.Detail.class)
     public ResponseEntity<User> getUser() 
     {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        

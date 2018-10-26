@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 
 /**
  *
@@ -26,8 +27,14 @@ public class BaseEntity<T> extends Mapper<T>{
     @Index(unique=true) 
     @JsonView(EntityView.List.class)
     protected String uuid;    
-    protected Long createdAt;
-    private Long updatedAt;
+    
+    @Convert(DateConverter.class)
+    @JsonView(EntityView.List.class)
+    protected Date createdAt;
+    
+    @Convert(DateConverter.class)
+    @JsonView(EntityView.Detail.class)
+    protected Date updatedAt;
     
     public Map<String, Object> toFilteredMap(String... keys)
     {
@@ -72,35 +79,27 @@ public class BaseEntity<T> extends Mapper<T>{
      * @return the createdAt
      */
     public Date getCreatedAt() {
-        Date date = new Date();
-        date.setTime(createdAt);
-        return date;
+        return createdAt;
     }
 
     /**
      * @param createdAt the createdAt to set
      */
     public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt.getTime();
+        this.createdAt = createdAt;
     }
 
     /**
      * @return the updatedAt
      */
     public Date getUpdatedAt() {
-        if( updatedAt == null ){
-            return null;
-        }
-        
-        Date date = new Date();
-        date.setTime(updatedAt);
-        return date;
+        return updatedAt;
     }
 
     /**
      * @param updatedAt the updatedAt to set
      */
     public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt.getTime();
+        this.updatedAt = updatedAt;
     }
 }

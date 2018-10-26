@@ -14,6 +14,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends BaseRepository<Post>
 {
-    @Query("MATCH (m:Post)-[r:ABOUTS]->(a:Plant) WHERE a.uuid = {plant_id} RETURN m,r,a")
+    @Query("MATCH (c:Comment)-[r1:ABOUTS]->(m:Post)-[r2:ABOUTS]->(a:Plant) WHERE a.uuid = {plant_id} RETURN m,r1,r2,a,c")
     Page<Post> findByPlantId(@Param("plant_id") String plantId, Pageable pageable);
 }

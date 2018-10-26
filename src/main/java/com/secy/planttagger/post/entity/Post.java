@@ -77,15 +77,16 @@ public class Post extends BaseEntity<Post>{
     }
     
     @Relationship(type = "ABOUTS", direction = Relationship.INCOMING)
-    @JsonIgnore
+    @JsonView(EntityView.List.class)
     private List<Comment> comments = new ArrayList<>();
     
     @JsonIgnore
-    public void addComment(Comment comment){        
+    public void addComment(Comment comment){    
+        comment.setPost(this);
         this.comments.add(comment);
     }
     
-    @JsonIgnore
+    @JsonView(EntityView.List.class)
     public List<Comment> getComments(){
         return this.comments;
     }

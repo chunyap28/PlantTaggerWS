@@ -56,7 +56,7 @@ public class PlantService{
     {
         Plant plant = plantRepository.findByUuid(uuid);
         if( plant == null ){
-            throw new PlantNotFoundException();
+            throw new ObjectNotFoundException("Plant");
         }
         
         return plant;

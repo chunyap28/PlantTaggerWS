@@ -6,10 +6,12 @@
 package com.secy.planttagger.common.fileservice;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.secy.planttagger.core.DateConverter;
 import com.secy.planttagger.core.EntityView;
 import com.secy.planttagger.core.Mapper;
 import java.util.Date;
 import java.util.UUID;
+import org.neo4j.ogm.annotation.typeconversion.Convert;
 
 /**
  *
@@ -24,7 +26,8 @@ public class FileReference extends Mapper<FileObject>{
     @JsonView(EntityView.List.class)
     protected String description;
     @JsonView(EntityView.List.class)
-    protected Long createdAt;
+    @Convert(DateConverter.class)
+    protected Date createdAt;
     
     public FileReference(){
     }
@@ -82,15 +85,13 @@ public class FileReference extends Mapper<FileObject>{
      * @return the createdAt
      */
     public Date getCreatedAt() {
-        Date date = new Date();
-        date.setTime(createdAt);
-        return date;
+        return createdAt;
     }
 
     /**
      * @param createdAt the createdAt to set
      */
     public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt.getTime();
+        this.createdAt = createdAt;
     }
 }

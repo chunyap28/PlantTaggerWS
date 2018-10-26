@@ -7,7 +7,7 @@ package com.secy.planttagger.country.service;
 
 import com.secy.planttagger.country.entity.Country;
 import com.secy.planttagger.country.repository.CountryRepository;
-import com.secy.planttagger.exception.CountryNotFoundException;
+import com.secy.planttagger.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ public class CountryService {
     public Country getByCode(String code){
         Country country = countryRepository.findByCode(code);
         if( country == null ){
-            throw new CountryNotFoundException();
+            throw new ObjectNotFoundException("Country");
         }
         
         return country;

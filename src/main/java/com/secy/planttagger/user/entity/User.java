@@ -224,6 +224,7 @@ public class User extends BaseEntity<User>
     }
     
     @Relationship(type = "IS_IN", direction = Relationship.OUTGOING)
+    @JsonView(EntityView.List.class)
     private Country country;
 
     public void setCountry(Country country){
